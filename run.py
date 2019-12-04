@@ -19,6 +19,7 @@ def download_video(video_id, output_dir):
     command = ' '.join(command)
     attempts = 0
     status = False
+    num_attempts = 3
     while True:
         try:
             output = subprocess.check_output(command, shell=True,
@@ -26,7 +27,8 @@ def download_video(video_id, output_dir):
         except subprocess.CalledProcessError as err:
             attempts += 1
             if attempts == num_attempts:
-                return status, err.output
+                print(err.output)
+                return status
         else:
             break
     status = True
@@ -57,7 +59,7 @@ if __name__ == '__main__':
         if download_video(vidx, args.video_dir):
             download_count += 1
             Path(os.path.join(args.checkpoint_dir, vidx)).touch()
-        time.sleep(1)
+        time.sleep(30)
     print('All done, {} videos were downloaded.'.format(download_count))
 
 
